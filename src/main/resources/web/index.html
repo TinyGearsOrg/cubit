@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>uomcalc</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #fafaf8; --fg: #1d1f21; --muted: #6b7078; --line: #dcdcd6;
+    --card: #ffffff; --accent: #1f6feb; --err: #c0362c; --chip: #eef1f6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #16181b; --fg: #e6e7e9; --muted: #9096a0; --line: #2d3138;
+            --card: #1e2125; --accent: #6aa5ff; --err: #ff7b72; --chip: #262b33; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg);
+         font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 760px; margin: 0 auto; padding: 32px 16px 64px; }
+  h1 { font-size: 1.4rem; margin: 0; letter-spacing: -0.01em; }
+  .sub { color: var(--muted); margin: 2px 0 20px; }
+  .mono, input, .out, .expr { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+  form { display: flex; gap: 8px; }
+  input { flex: 1; min-width: 0; font-size: 1.05rem; padding: 10px 12px; color: var(--fg);
+          background: var(--card); border: 1px solid var(--line); border-radius: 8px; }
+  input:focus { outline: 2px solid var(--accent); outline-offset: 0; border-color: transparent; }
+  button { font: inherit; padding: 8px 14px; color: var(--fg); background: var(--card);
+           border: 1px solid var(--line); border-radius: 8px; cursor: pointer; }
+  button:hover { border-color: var(--accent); }
+  button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+  .examples { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 0; }
+  .examples button { padding: 3px 10px; font-size: 0.85rem; color: var(--muted); background: transparent; }
+  .tools { display: flex; gap: 8px; align-items: center; margin: 14px 0 6px; color: var(--muted); font-size: 0.9rem; }
+  .entry { background: var(--card); border: 1px solid var(--line); border-radius: 8px;
+           padding: 10px 14px; margin-top: 10px; cursor: pointer; }
+  .entry:hover { border-color: var(--accent); }
+  .expr { color: var(--muted); white-space: pre-wrap; overflow-wrap: anywhere; }
+  .expr mark { background: none; color: var(--err); text-decoration: underline wavy; }
+  .out { font-size: 1.25rem; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .out.err { color: var(--err); font-size: 1rem; }
+  .out.text { font-size: 0.9rem; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+  .chip { font-size: 0.78rem; padding: 1px 8px; border-radius: 99px; background: var(--chip); color: var(--muted); }
+  .empty { color: var(--muted); margin-top: 24px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>uomcalc</h1>
+  <p class="sub">Units and dimensional analysis, built on <a href="https://github.com/TinyGearsOrg/uom">uom</a>.</p>
+
+  <form id="form" autocomplete="off">
+    <input id="input" type="text" autofocus spellcheck="false" autocapitalize="off"
+           placeholder="3 kN * 2 m to J" aria-label="expression">
+    <button type="submit">Evaluate</button>
+  </form>
+  <div class="examples" id="examples"></div>
+
+  <div class="tools">
+    <button type="button" id="exact" aria-pressed="false" title="exact decimal arithmetic">exact decimals</button>
+    <button type="button" id="help">help</button>
+    <button type="button" id="clear">clear history</button>
+  </div>
+
+  <div id="log"></div>
+  <p class="empty" id="empty">Try one of the examples above, or <code>:help</code>.</p>
+</main>
+
+<script>
+(function () {
+  var EXAMPLES = ['3 kN * 2 m to J', '10 mi / 2 h to km/h', '20 °C to °F', '1 GiB to MiB',
+                  '9.81 m/s^2 * 70 kg to N', 'x = 90 km/h', 'x * 2 h to mi', '3 m + 2 s'];
+  var form = document.getElementById('form');
+  var input = document.getElementById('input');
+  var log = document.getElementById('log');
+  var empty = document.getElementById('empty');
+  var exactBtn = document.getElementById('exact');
+  var history = [];
+  var cursor = 0;
+  var session = newSession();
+
+  function newSession() {
+    var id = '';
+    try { id = localStorage.getItem('uomcalc.session') || ''; } catch (e) { /* storage blocked */ }
+    if (!/^[A-Za-z0-9_-]{8,64}$/.test(id)) {
+      var bytes = new Uint8Array(12);
+      crypto.getRandomValues(bytes);
+      id = Array.prototype.map.call(bytes, function (b) { return ('0' + b.toString(16)).slice(-2); }).join('');
+      try { localStorage.setItem('uomcalc.session', id); } catch (e) { /* storage blocked */ }
+    }
+    return id;
+  }
+
+  function el(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) { e.className = cls; }
+    if (text !== undefined) { e.textContent = text; }
+    return e;
+  }
+
+  function ask(expr) {
+    return fetch('/api/eval', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ expr: expr, session: session })
+    }).then(function (r) { return r.json(); });
+  }
+
+  function render(expr, res) {
+    var entry = el('div', 'entry');
+    var e = el('div', 'expr');
+    if (res.error && res.position >= 0 && res.position < expr.length) {
+      e.appendChild(document.createTextNode(expr.slice(0, res.position)));
+      e.appendChild(el('mark', '', expr.charAt(res.position)));
+      e.appendChild(document.createTextNode(expr.slice(res.position + 1)));
+    } else {
+      e.textContent = expr;
+    }
+    entry.appendChild(e);
+    var multi = res.output.indexOf('\n') >= 0 || expr.charAt(0) === ':';
+    entry.appendChild(el('div', 'out' + (res.error ? ' err' : multi ? ' text' : ''), res.output));
+    if (!res.error && res.dimension && res.dimension !== '1') {
+      var chips = el('div', 'chips');
+      res.types.forEach(function (t) { chips.appendChild(el('span', 'chip', t)); });
+      chips.appendChild(el('span', 'chip mono', res.dimension));
+      entry.appendChild(chips);
+    }
+    entry.title = 'click to reuse';
+    entry.addEventListener('click', function () { input.value = expr; input.focus(); });
+    log.insertBefore(entry, log.firstChild);
+    empty.hidden = true;
+  }
+
+  function submit(expr) {
+    expr = expr.trim();
+    if (!expr) { return Promise.resolve(); }
+    history.push(expr);
+    cursor = history.length;
+    return ask(expr).then(function (res) { render(expr, res); }, function () {
+      render(expr, { error: true, output: 'the server did not answer', position: -1, types: [] });
+    });
+  }
+
+  form.addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    var v = input.value;
+    input.value = '';
+    submit(v);
+  });
+
+  input.addEventListener('keydown', function (ev) {
+    if (ev.key === 'ArrowUp' && cursor > 0) {
+      cursor--; input.value = history[cursor]; ev.preventDefault();
+    } else if (ev.key === 'ArrowDown') {
+      cursor = Math.min(cursor + 1, history.length);
+      input.value = cursor < history.length ? history[cursor] : '';
+      ev.preventDefault();
+    }
+  });
+
+  exactBtn.addEventListener('click', function () {
+    var on = exactBtn.getAttribute('aria-pressed') !== 'true';
+    ask(':exact ' + (on ? 'on' : 'off')).then(function () {
+      exactBtn.setAttribute('aria-pressed', String(on));
+    });
+  });
+  document.getElementById('help').addEventListener('click', function () { submit(':help'); });
+  document.getElementById('clear').addEventListener('click', function () {
+    log.textContent = ''; empty.hidden = false;
+  });
+
+  // the session lives on the server, so a reload must pick up its mode
+  ask(':exact').then(function (res) {
+    exactBtn.setAttribute('aria-pressed', String(/ is on$/.test(res.output)));
+  }, function () { /* the first evaluation shows the problem */ });
+
+  var ex = document.getElementById('examples');
+  EXAMPLES.forEach(function (text) {
+    var b = el('button', 'mono', text);
+    b.type = 'button';
+    b.addEventListener('click', function () { submit(text); });
+    ex.appendChild(b);
+  });
+})();
+</script>
+</body>
+</html>
