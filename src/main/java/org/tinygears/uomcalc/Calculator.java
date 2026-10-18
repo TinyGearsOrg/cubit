@@ -86,7 +86,7 @@ public final class Calculator {
             return new Result(
                     outcome.assigned() == null ? text : outcome.assigned() + " = " + text,
                     dimension(q.unit().dimension()),
-                    q.unit().dimension().equals(Dimension.NONE) ? List.of() : QuantityTypes.namesOf(q),
+                    q.unit().dimension().equals(Dimension.NONE) ? List.of() : TypeNames.namesOf(q),
                     outcome.assigned(),
                     false,
                     -1);
@@ -126,7 +126,7 @@ public final class Calculator {
 
     /** What a quantity is, for an error message: {@code Length [L]}, or just the dimension for an untyped product. */
     static String describe(Untyped q) {
-        List<String> names = QuantityTypes.namesOf(q);
+        List<String> names = TypeNames.namesOf(q);
         String dim = dimension(q.unit().dimension());
         return names.isEmpty() ? "[" + dim + "]" : String.join("/", names) + " [" + dim + "]";
     }

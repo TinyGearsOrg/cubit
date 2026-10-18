@@ -289,7 +289,7 @@ final class Evaluator {
         if (session.isPlain(a)) {
             return b.multiply(a.value());
         }
-        return a.multiply(b);
+        return TypeNames.inSystemUnit(a.multiply(b));
     }
 
     private Untyped divide(Untyped a, Untyped b, Token op) {
@@ -300,9 +300,9 @@ final class Evaluator {
             return a.divide(b.value());
         }
         if (session.isPlain(a)) {
-            return b.inverse().multiply(a.value());
+            return TypeNames.inSystemUnit(b.inverse().multiply(a.value()));
         }
-        return a.divide(b);
+        return TypeNames.inSystemUnit(a.divide(b));
     }
 
     private Untyped pow(Untyped base, Untyped exponent, Token op) {

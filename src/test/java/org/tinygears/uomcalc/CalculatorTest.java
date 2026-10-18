@@ -48,7 +48,7 @@ class CalculatorTest {
 
     @ParameterizedTest(name = "{0} = {1}")
     @CsvSource(delimiter = '=', value = {
-        "3 kN * 2 m = 6000.0 kg·m^2/s^2",
+        "3 kN * 2 m = 6000.0 J",
         "3 kN * 2 m to J = 6000.0 J",
         "10 mi / 2 h = 2.2352 m/s",
         "10 mi / 2 h to km/h = 8.04672 km/h",
@@ -60,18 +60,22 @@ class CalculatorTest {
         "2^10 = 1024.0",
         "-2^2 = -4.0",
         "2 m^2 = 2.0 m^2",
-        "(2 m)^2 = 4.0 m^2",
+        "(2 m)^2 = 4.0 m²",
         "2 m ^ 2 to ft^2 = 21.527820833419444 ft^2",
         "1 / 2 m = 0.5 1/m",
         "1 / (2 s) to Hz = 0.5 Hz",
         "1e3 m to km = 1.0 km",
-        "9.81 m/s^2 * 70 kg = 686.7 kg·m/s^2",
+        "9.81 m/s^2 * 70 kg = 686.7 N",
         "9.81 m/s^2 * 70 kg to N = 686.7 N",
         "1 GiB to MiB = 1024.0 MiB",
         "1 gal_US to l = 3.785411784 L",
         "3 km/h = 3.0 km/h",
         "5 m -> cm = 500.0 cm",
         "2 (3 m) = 6.0 m",
+        "3 W * 2 s = 6.0 J",
+        "2 kg * 3 m/s = 6.0 kg·m/s",
+        "1 / (2 s) = 0.5 1/s",
+        "6 m / 2 m = 3.0",
     })
     void evaluates(String expression, String expected) {
         assertEquals(expected, ok(expression));
