@@ -24,6 +24,14 @@ java -jar target/uom-calc-0.1.0-SNAPSHOT.jar '20 °C to °F'    # one expression
 java -jar target/uom-calc-0.1.0-SNAPSHOT.jar --serve          # http://localhost:8080
 ```
 
+With [jbang](https://www.jbang.dev), no build is needed; the script `uomcalc.java` takes the same arguments:
+
+```
+jbang uomcalc.java '3 kN * 2 m to J'
+jbang uomcalc.java --serve
+jbang uomcalc@tinygearsorg/uom-calc '20 °C to °F'      # from the catalog in this repository
+```
+
 The dependency on uom is the released `org.tinygears:uom` from Maven Central.
 
 ## The language

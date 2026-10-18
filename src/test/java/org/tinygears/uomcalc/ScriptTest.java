@@ -1,0 +1,55 @@
+/*
+ * Copyright (c) 2026 TinyGears.org
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License, Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+package org.tinygears.uomcalc;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.junit.jupiter.api.Test;
+
+/** The jbang script repeats the dependency versions of the POM; they must not drift apart. */
+class ScriptTest {
+    private static String pomProperty(String pom, String name) {
+        Matcher m = Pattern.compile("<" + Pattern.quote(name) + ">([^<]+)</").matcher(pom);
+        assertTrue(m.find(), name + " is not in pom.xml");
+        return m.group(1);
+    }
+
+    @Test
+    void scriptDependenciesMatchThePom() throws IOException {
+        String pom = Files.readString(Path.of("pom.xml"));
+        String script = Files.readString(Path.of("uomcalc.java"));
+        assertTrue(script.contains("//DEPS org.tinygears:uom:" + pomProperty(pom, "uom.version") + "\n"));
+        assertTrue(script.contains("//DEPS io.javalin:javalin:" + pomProperty(pom, "javalin.version") + "\n"));
+        assertTrue(script.contains("//DEPS org.slf4j:slf4j-simple:" + pomProperty(pom, "slf4j.version") + "\n"));
+    }
+
+    @Test
+    void scriptNamesEverySourceAndResource() throws IOException {
+        String script = Files.readString(Path.of("uomcalc.java"));
+        assertTrue(script.contains("//SOURCES src/main/java/org/tinygears/uomcalc/*.java\n"));
+        for (String file : new String[] {"web/index.html", "simplelogger.properties"}) {
+            assertTrue(
+                    script.contains("//FILES " + file + "=src/main/resources/" + file + "\n"),
+                    file + " is not in the script");
+            assertTrue(Files.exists(Path.of("src/main/resources", file)), file);
+        }
+        assertEquals(
+                "org.tinygears.uomcalc.Main",
+                Pattern.compile("(org\\.tinygears\\.uomcalc\\.Main)\\.main").matcher(script).results()
+                        .map(r -> r.group(1)).findFirst().orElse(""));
+    }
+}
