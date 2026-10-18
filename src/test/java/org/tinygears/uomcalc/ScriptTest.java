@@ -10,6 +10,7 @@
 package org.tinygears.uomcalc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
@@ -17,6 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 
@@ -40,7 +42,14 @@ class ScriptTest {
     @Test
     void scriptNamesEverySourceAndResource() throws IOException {
         String script = Files.readString(Path.of("uomcalc.java"));
-        assertTrue(script.contains("//SOURCES src/main/java/org/tinygears/uomcalc/*.java\n"));
+        // a pattern does not work when jbang runs the script from a URL
+        assertFalse(script.contains("*.java"));
+        try (Stream<Path> sources = Files.list(Path.of("src/main/java/org/tinygears/uomcalc"))) {
+            for (Path source : sources.sorted().toList()) {
+                String line = "//SOURCES src/main/java/org/tinygears/uomcalc/" + source.getFileName() + "\n";
+                assertTrue(script.contains(line), source.getFileName() + " is not in the script");
+            }
+        }
         for (String file : new String[] {"web/index.html", "simplelogger.properties"}) {
             assertTrue(
                     script.contains("//FILES " + file + "=src/main/resources/" + file + "\n"),
