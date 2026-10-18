@@ -24,13 +24,17 @@ java -jar target/uom-calc-0.1.0-SNAPSHOT.jar '20 °C to °F'    # one expression
 java -jar target/uom-calc-0.1.0-SNAPSHOT.jar --serve          # http://localhost:8080
 ```
 
-With [jbang](https://www.jbang.dev), no build is needed; the script `uomcalc.java` takes the same arguments:
+With [jbang](https://www.jbang.dev) no build is needed. The script `uomcalc.java` takes the same arguments, from a
+clone or straight from GitHub:
 
 ```
 jbang uomcalc.java '3 kN * 2 m to J'
-jbang uomcalc.java --serve
-jbang uomcalc@tinygearsorg/uom-calc '20 °C to °F'      # from the catalog in this repository
+jbang uomcalc@TinyGearsOrg/uom-calc '20 °C to °F'      # the catalog in this repository
+jbang https://github.com/TinyGearsOrg/uom-calc/blob/main/uomcalc.java --serve
 ```
+
+jbang asks once whether to trust the repository (`jbang trust add https://github.com/TinyGearsOrg/uom-calc/`); the
+organization in the catalog name is case-sensitive for that check.
 
 The dependency on uom is the released `org.tinygears:uom` from Maven Central.
 
