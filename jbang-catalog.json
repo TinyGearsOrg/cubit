@@ -1,8 +1,8 @@
 {
   "catalogs": {},
   "aliases": {
-    "uomcalc": {
-      "script-ref": "uomcalc.java",
+    "cubit": {
+      "script-ref": "cubit.java",
       "description": "A dimensional-analysis calculator on uom: CLI and web"
     }
   }

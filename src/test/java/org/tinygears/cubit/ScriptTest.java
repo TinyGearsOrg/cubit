@@ -7,7 +7,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-package org.tinygears.uomcalc;
+package org.tinygears.cubit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -33,7 +33,7 @@ class ScriptTest {
     @Test
     void scriptDependenciesMatchThePom() throws IOException {
         String pom = Files.readString(Path.of("pom.xml"));
-        String script = Files.readString(Path.of("uomcalc.java"));
+        String script = Files.readString(Path.of("cubit.java"));
         assertTrue(script.contains("//DEPS org.tinygears:uom:" + pomProperty(pom, "uom.version") + "\n"));
         assertTrue(script.contains("//DEPS io.javalin:javalin:" + pomProperty(pom, "javalin.version") + "\n"));
         assertTrue(script.contains("//DEPS org.slf4j:slf4j-simple:" + pomProperty(pom, "slf4j.version") + "\n"));
@@ -41,12 +41,12 @@ class ScriptTest {
 
     @Test
     void scriptNamesEverySourceAndResource() throws IOException {
-        String script = Files.readString(Path.of("uomcalc.java"));
+        String script = Files.readString(Path.of("cubit.java"));
         // a pattern does not work when jbang runs the script from a URL
         assertFalse(script.contains("*.java"));
-        try (Stream<Path> sources = Files.list(Path.of("src/main/java/org/tinygears/uomcalc"))) {
+        try (Stream<Path> sources = Files.list(Path.of("src/main/java/org/tinygears/cubit"))) {
             for (Path source : sources.sorted().toList()) {
-                String line = "//SOURCES src/main/java/org/tinygears/uomcalc/" + source.getFileName() + "\n";
+                String line = "//SOURCES src/main/java/org/tinygears/cubit/" + source.getFileName() + "\n";
                 assertTrue(script.contains(line), source.getFileName() + " is not in the script");
             }
         }
@@ -57,8 +57,8 @@ class ScriptTest {
             assertTrue(Files.exists(Path.of("src/main/resources", file)), file);
         }
         assertEquals(
-                "org.tinygears.uomcalc.Main",
-                Pattern.compile("(org\\.tinygears\\.uomcalc\\.Main)\\.main").matcher(script).results()
+                "org.tinygears.cubit.Main",
+                Pattern.compile("(org\\.tinygears\\.cubit\\.Main)\\.main").matcher(script).results()
                         .map(r -> r.group(1)).findFirst().orElse(""));
     }
 }

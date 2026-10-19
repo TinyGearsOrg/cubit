@@ -8,7 +8,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package org.tinygears.uomcalc;
+package org.tinygears.cubit;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -25,10 +25,10 @@ public final class Main {
     static final int RUNNING = -1;
 
     private static final String USAGE = """
-            usage: uomcalc [options] [expression]
-              uomcalc                        interactive calculator (:help inside)
-              uomcalc '10 mi / 2 h to km/h'  evaluate one expression and print the result
-              uomcalc --serve                web UI and API on http://localhost:8080
+            usage: cubit [options] [expression]
+              cubit                        interactive calculator (:help inside)
+              cubit '10 mi / 2 h to km/h'  evaluate one expression and print the result
+              cubit --serve                web UI and API on http://localhost:8080
 
             options:
               --serve         start the web server
@@ -99,7 +99,7 @@ public final class Main {
                 return 2;
             }
             WebServer server = new WebServer(exact).start(host, port);
-            out.println("uomcalc listening on http://" + host + ":" + server.port());
+            out.println("cubit listening on http://" + host + ":" + server.port());
             return RUNNING;
         }
         Calculator calculator = new Calculator(true);
@@ -136,7 +136,7 @@ public final class Main {
         boolean interactive = System.console() != null;
         BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
         if (interactive) {
-            out.println("uomcalc: units and dimensional analysis, :help for help, :quit to leave");
+            out.println("cubit: units and dimensional analysis, :help for help, :quit to leave");
         }
         try {
             while (true) {

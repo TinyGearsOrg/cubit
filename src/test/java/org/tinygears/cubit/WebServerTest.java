@@ -8,7 +8,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package org.tinygears.uomcalc;
+package org.tinygears.cubit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -98,7 +98,7 @@ class WebServerTest {
         HttpRequest request = HttpRequest.newBuilder(URI.create(base + "/")).build();
         HttpResponse<String> r = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(200, r.statusCode());
-        assertTrue(r.body().contains("<title>uomcalc</title>"));
+        assertTrue(r.body().contains("<title>cubit</title>"));
     }
 
     @Test

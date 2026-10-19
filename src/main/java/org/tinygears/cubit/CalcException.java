@@ -8,7 +8,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package org.tinygears.uomcalc;
+package org.tinygears.cubit;
 
 /** A user error in an expression, with the position in the text it refers to (or -1). */
 public final class CalcException extends RuntimeException {

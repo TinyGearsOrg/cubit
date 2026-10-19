@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>uomcalc</title>
+<title>cubit</title>
 <style>
   :root {
     color-scheme: light dark;
@@ -47,7 +47,7 @@
 </head>
 <body>
 <main>
-  <h1>uomcalc</h1>
+  <h1>cubit</h1>
   <p class="sub">Units and dimensional analysis, built on <a href="https://github.com/TinyGearsOrg/uom">uom</a>.</p>
 
   <form id="form" autocomplete="off">
@@ -82,12 +82,12 @@
 
   function newSession() {
     var id = '';
-    try { id = localStorage.getItem('uomcalc.session') || ''; } catch (e) { /* storage blocked */ }
+    try { id = localStorage.getItem('cubit.session') || ''; } catch (e) { /* storage blocked */ }
     if (!/^[A-Za-z0-9_-]{8,64}$/.test(id)) {
       var bytes = new Uint8Array(12);
       crypto.getRandomValues(bytes);
       id = Array.prototype.map.call(bytes, function (b) { return ('0' + b.toString(16)).slice(-2); }).join('');
-      try { localStorage.setItem('uomcalc.session', id); } catch (e) { /* storage blocked */ }
+      try { localStorage.setItem('cubit.session', id); } catch (e) { /* storage blocked */ }
     }
     return id;
   }

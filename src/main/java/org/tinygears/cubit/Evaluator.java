@@ -8,7 +8,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package org.tinygears.uomcalc;
+package org.tinygears.cubit;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -17,8 +17,8 @@ import org.tinygears.uom.ParseException;
 import org.tinygears.uom.Unit;
 import org.tinygears.uom.UnitFormat;
 import org.tinygears.uom.Untyped;
-import org.tinygears.uomcalc.Lexer.Kind;
-import org.tinygears.uomcalc.Lexer.Token;
+import org.tinygears.cubit.Lexer.Kind;
+import org.tinygears.cubit.Lexer.Token;
 
 /**
  * Parses and evaluates one statement over {@link Untyped} quantities:

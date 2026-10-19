@@ -8,7 +8,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package org.tinygears.uomcalc;
+package org.tinygears.cubit;
 
 import java.io.IOException;
 import java.math.BigDecimal;

@@ -1,15 +1,16 @@
-# uomcalc
+# cubit
 
 A dimensional-analysis calculator on [uom](https://github.com/TinyGearsOrg/uom): quantities with units, typed
-products, exact conversions. It runs as a command line tool and as a small web app, from one jar.
+products, exact conversions. It runs as a command line tool and as a small web app, from one jar. A cubit is an old
+unit of length, the span of a forearm.
 
 ```
-$ uomcalc '3 kN * 2 m to J'
+$ cubit '3 kN * 2 m to J'
 6000.0 J
-$ uomcalc -v '10 mi / 2 h to km/h'
+$ cubit -v '10 mi / 2 h to km/h'
 8.04672 km/h
   Speed  [L·T^-1]
-$ uomcalc '3 m + 2 s'
+$ cubit '3 m + 2 s'
 error: cannot add Length [L] and Time [T]
 ```
 
@@ -19,21 +20,21 @@ Java 17 or later and Maven 3.9:
 
 ```
 mvn -q -B clean verify
-java -jar target/uom-calc-0.1.0-SNAPSHOT.jar                  # interactive
-java -jar target/uom-calc-0.1.0-SNAPSHOT.jar '20 °C to °F'    # one expression
-java -jar target/uom-calc-0.1.0-SNAPSHOT.jar --serve          # http://localhost:8080
+java -jar target/cubit-0.1.0-SNAPSHOT.jar                  # interactive
+java -jar target/cubit-0.1.0-SNAPSHOT.jar '20 °C to °F'    # one expression
+java -jar target/cubit-0.1.0-SNAPSHOT.jar --serve          # http://localhost:8080
 ```
 
-With [jbang](https://www.jbang.dev) no build is needed. The script `uomcalc.java` takes the same arguments, from a
+With [jbang](https://www.jbang.dev) no build is needed. The script `cubit.java` takes the same arguments, from a
 clone or straight from GitHub:
 
 ```
-jbang uomcalc.java '3 kN * 2 m to J'
-jbang uomcalc@TinyGearsOrg/uom-calc '20 °C to °F'      # the catalog in this repository
-jbang https://github.com/TinyGearsOrg/uom-calc/blob/main/uomcalc.java --serve
+jbang cubit.java '3 kN * 2 m to J'
+jbang cubit@TinyGearsOrg/cubit '20 °C to °F'      # the catalog in this repository
+jbang https://github.com/TinyGearsOrg/cubit/blob/main/cubit.java --serve
 ```
 
-jbang asks once whether to trust the repository (`jbang trust add https://github.com/TinyGearsOrg/uom-calc/`); the
+jbang asks once whether to trust the repository (`jbang trust add https://github.com/TinyGearsOrg/cubit/`); the
 organization in the catalog name is case-sensitive for that check.
 
 The dependency on uom is the released `org.tinygears:uom` from Maven Central.
@@ -56,7 +57,7 @@ where a relation is declared (`Force · Length` is an `Energy`) and is shown in 
 `-v`, and the web page, also show the quantity types of the result and its dimension: several types can share a
 dimension (`Frequency` and `Radioactivity`).
 
-Quote an expression in the shell, which expands `*`: `uomcalc '2 m * 3'`.
+Quote an expression in the shell, which expands `*`: `cubit '2 m * 3'`.
 
 ## Web
 

@@ -8,7 +8,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package org.tinygears.uomcalc;
+package org.tinygears.cubit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -81,7 +81,7 @@ class MainTest {
 
     @Test
     void helpAndUsageErrors() {
-        assertTrue(run("", "--help").out().startsWith("usage: uomcalc"));
+        assertTrue(run("", "--help").out().startsWith("usage: cubit"));
         assertEquals("--port needs a value" + NL, run("", "--port").err());
         assertEquals("invalid port: abc" + NL, run("", "--serve", "--port", "abc").err());
         assertEquals("invalid port: 70000" + NL, run("", "--serve", "--port", "70000").err());
@@ -100,6 +100,6 @@ class MainTest {
     void serveStartsTheServerAndKeepsRunning() throws Exception {
         Run r = run("", "--serve", "--port", "0");
         assertEquals(Main.RUNNING, r.code());
-        assertTrue(r.out().startsWith("uomcalc listening on http://localhost:"), r.out());
+        assertTrue(r.out().startsWith("cubit listening on http://localhost:"), r.out());
     }
 }
