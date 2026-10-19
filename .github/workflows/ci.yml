@@ -57,7 +57,7 @@ jobs:
           curl -fsSL -o "$RUNNER_TEMP/jbang.zip" "https://github.com/jbangdev/jbang/releases/download/v${JBANG_VERSION}/jbang-${JBANG_VERSION}.zip"
           echo "${JBANG_SHA256}  ${RUNNER_TEMP}/jbang.zip" | sha256sum --check -
           unzip -q "$RUNNER_TEMP/jbang.zip" -d "$RUNNER_TEMP"
-          echo "$RUNNER_TEMP/jbang/bin" >> "$GITHUB_PATH"
+          echo "$RUNNER_TEMP/jbang-${JBANG_VERSION}/bin" >> "$GITHUB_PATH"
       # the script compiles the sources of the repository, so this catches a source missing from cubit.java
       - name: Run the script
         run: test "$(jbang cubit.java '3 kN * 2 m to J')" = "6000.0 J"
