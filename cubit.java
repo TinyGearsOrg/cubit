@@ -10,8 +10,8 @@
  */
 //JAVA 25+
 //DEPS org.tinygears:uom:0.1.0
-//DEPS io.javalin:javalin:6.7.0
-//DEPS org.slf4j:slf4j-simple:2.0.16
+//DEPS io.javalin:javalin:7.2.3
+//DEPS org.slf4j:slf4j-simple:2.0.20
 //SOURCES src/main/java/org/tinygears/cubit/CalcException.java
 //SOURCES src/main/java/org/tinygears/cubit/Calculator.java
 //SOURCES src/main/java/org/tinygears/cubit/Evaluator.java

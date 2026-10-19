@@ -46,11 +46,11 @@ final class WebServer {
     /** Starts listening; {@code port} 0 picks a free port, see {@link #port()}. */
     WebServer start(String host, int port) {
         app = Javalin.create(config -> {
-            config.showJavalinBanner = false;
+            config.startup.showJavalinBanner = false;
             config.http.maxRequestSize = 8192L;
             config.staticFiles.add("/web", Location.CLASSPATH);
+            config.routes.post("/api/eval", this::eval);
         });
-        app.post("/api/eval", this::eval);
         app.start(host, port);
         return this;
     }
