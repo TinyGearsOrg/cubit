@@ -1,0 +1,63 @@
+# SPDX-License-Identifier: Apache-2.0
+# Build and checks only: nothing is deployed, signed or tagged.
+name: CI
+
+# pushes to main; other branches run through their pull request, once
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  # a superseded pull-request run is cancelled; every commit on main gets a complete run
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  build:
+    name: build (JDK ${{ matrix.java }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        java: [17, 21, 25]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
+        with:
+          distribution: temurin
+          java-version: ${{ matrix.java }}
+          cache: maven
+      - run: mvn -B verify
+
+  jbang:
+    name: jbang script
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      # pinned and verified against the checksums_sha256.txt of the release; update both together
+      JBANG_VERSION: 0.142.0
+      JBANG_SHA256: 8bee0bd035344cc46322aff7117ec475d48cefe37f2a79ff2c6ee3db577bb070
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
+        with:
+          distribution: temurin
+          java-version: 21
+      - name: Install jbang
+        run: |
+          curl -fsSL -o "$RUNNER_TEMP/jbang.zip" "https://github.com/jbangdev/jbang/releases/download/v${JBANG_VERSION}/jbang-${JBANG_VERSION}.zip"
+          echo "${JBANG_SHA256}  ${RUNNER_TEMP}/jbang.zip" | sha256sum --check -
+          unzip -q "$RUNNER_TEMP/jbang.zip" -d "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/jbang/bin" >> "$GITHUB_PATH"
+      # the script compiles the sources of the repository, so this catches a source missing from cubit.java
+      - name: Run the script
+        run: test "$(jbang cubit.java '3 kN * 2 m to J')" = "6000.0 J"

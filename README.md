@@ -4,6 +4,7 @@
 units, typed products and exact conversions, as a command line tool and a web app</p>
 
 <p align="center">
+  <a href="https://github.com/TinyGearsOrg/cubit/actions/workflows/ci.yml"><img src="https://github.com/TinyGearsOrg/cubit/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue" alt="License: Apache-2.0"></a>
   <img src="https://img.shields.io/badge/Java-17%2B-orange" alt="Java 17+">
   <a href="https://central.sonatype.com/artifact/org.tinygears/uom"><img src="https://img.shields.io/maven-central/v/org.tinygears/uom?label=uom" alt="uom on Maven Central"></a>
