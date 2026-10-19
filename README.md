@@ -6,7 +6,7 @@ units, typed products and exact conversions, as a command line tool and a web ap
 <p align="center">
   <a href="https://github.com/TinyGearsOrg/cubit/actions/workflows/ci.yml"><img src="https://github.com/TinyGearsOrg/cubit/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue" alt="License: Apache-2.0"></a>
-  <img src="https://img.shields.io/badge/Java-17%2B-orange" alt="Java 17+">
+  <img src="https://img.shields.io/badge/Java-25%2B-orange" alt="Java 25+">
   <a href="https://central.sonatype.com/artifact/org.tinygears/uom"><img src="https://img.shields.io/maven-central/v/org.tinygears/uom?label=uom" alt="uom on Maven Central"></a>
   <a href="https://www.jbang.dev"><img src="https://img.shields.io/badge/run%20with-jbang-green" alt="Run with jbang"></a>
 </p>
@@ -28,7 +28,7 @@ error: cannot add Length [L] and Time [T]
 
 ## Build and run
 
-Java 17 or later and Maven 3.9:
+Java 25 or later and Maven 3.9:
 
 ```
 mvn -q -B clean verify

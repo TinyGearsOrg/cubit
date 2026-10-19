@@ -28,7 +28,6 @@ jobs:
       - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
         with:
           distribution: temurin
-          # the code compiles with --release 17 (pom.xml), so the Java 17 API baseline is still checked
           java-version: 25
           cache: maven
       - run: mvn -B verify

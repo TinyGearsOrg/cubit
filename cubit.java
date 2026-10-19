@@ -8,7 +8,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-//JAVA 17+
+//JAVA 25+
 //DEPS org.tinygears:uom:0.1.0
 //DEPS io.javalin:javalin:6.7.0
 //DEPS org.slf4j:slf4j-simple:2.0.16
