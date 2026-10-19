@@ -1,8 +1,19 @@
-# cubit
+<h1 align="center">cubit</h1>
 
-A dimensional-analysis calculator on [uom](https://github.com/TinyGearsOrg/uom): quantities with units, typed
-products, exact conversions. It runs as a command line tool and as a small web app, from one jar. A cubit is an old
-unit of length, the span of a forearm.
+<p align="center"><b>A dimensional-analysis calculator</b><br>
+units, typed products and exact conversions, as a command line tool and a web app</p>
+
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue" alt="License: Apache-2.0"></a>
+  <img src="https://img.shields.io/badge/Java-17%2B-orange" alt="Java 17+">
+  <a href="https://central.sonatype.com/artifact/org.tinygears/uom"><img src="https://img.shields.io/maven-central/v/org.tinygears/uom?label=uom" alt="uom on Maven Central"></a>
+  <a href="https://www.jbang.dev"><img src="https://img.shields.io/badge/run%20with-jbang-green" alt="Run with jbang"></a>
+</p>
+
+cubit is a calculator for quantities with units, built on [uom](https://github.com/TinyGearsOrg/uom): it converts
+exactly, types the product of two quantities (`Force · Length` is an `Energy`), and reports a sum of different
+dimensions as an error that names both. It runs as a command line tool and as a small web app, from one jar. A cubit is
+an old unit of length, the span of a forearm.
 
 ```
 $ cubit '3 kN * 2 m to J'
