@@ -23,8 +23,6 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.release>25</maven.compiler.release>
     <uom.version>0.1.0</uom.version>
-    <javalin.version>7.2.3</javalin.version>
-    <slf4j.version>2.0.20</slf4j.version>
     <junit.version>6.1.3</junit.version>
     <main.class>org.tinygears.cubit.Main</main.class>
   </properties>
@@ -34,16 +32,6 @@
       <groupId>org.tinygears</groupId>
       <artifactId>uom</artifactId>
       <version>${uom.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>io.javalin</groupId>
-      <artifactId>javalin</artifactId>
-      <version>${javalin.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-simple</artifactId>
-      <version>${slf4j.version}</version>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>

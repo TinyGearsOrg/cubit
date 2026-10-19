@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -98,9 +99,14 @@ public final class Main {
                 err.println("--serve takes no expression and no --units");
                 return 2;
             }
-            WebServer server = new WebServer(exact).start(host, port);
-            out.println("cubit listening on http://" + host + ":" + server.port());
-            return RUNNING;
+            try {
+                WebServer server = new WebServer(exact).start(host, port);
+                out.println("cubit listening on http://" + host + ":" + server.port());
+                return RUNNING;
+            } catch (UncheckedIOException e) {
+                err.println("error: cannot listen on " + host + ":" + port + ": " + e.getCause().getMessage());
+                return 1;
+            }
         }
         Calculator calculator = new Calculator(true);
         if (exact) {

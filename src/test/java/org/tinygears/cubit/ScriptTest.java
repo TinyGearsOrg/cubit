@@ -35,8 +35,8 @@ class ScriptTest {
         String pom = Files.readString(Path.of("pom.xml"));
         String script = Files.readString(Path.of("cubit.java"));
         assertTrue(script.contains("//DEPS org.tinygears:uom:" + pomProperty(pom, "uom.version") + "\n"));
-        assertTrue(script.contains("//DEPS io.javalin:javalin:" + pomProperty(pom, "javalin.version") + "\n"));
-        assertTrue(script.contains("//DEPS org.slf4j:slf4j-simple:" + pomProperty(pom, "slf4j.version") + "\n"));
+        // uom is the only dependency of the application
+        assertEquals(1, script.lines().filter(l -> l.startsWith("//DEPS ")).count());
     }
 
     @Test
@@ -50,7 +50,7 @@ class ScriptTest {
                 assertTrue(script.contains(line), source.getFileName() + " is not in the script");
             }
         }
-        for (String file : new String[] {"web/index.html", "simplelogger.properties"}) {
+        for (String file : new String[] {"web/index.html"}) {
             assertTrue(
                     script.contains("//FILES " + file + "=src/main/resources/" + file + "\n"),
                     file + " is not in the script");

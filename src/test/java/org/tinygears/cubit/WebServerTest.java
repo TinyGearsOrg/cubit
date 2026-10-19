@@ -95,10 +95,48 @@ class WebServerTest {
 
     @Test
     void servesThePage() throws Exception {
-        HttpRequest request = HttpRequest.newBuilder(URI.create(base + "/")).build();
-        HttpResponse<String> r = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(200, r.statusCode());
-        assertTrue(r.body().contains("<title>cubit</title>"));
+        for (String path : new String[] {"/", "/index.html"}) {
+            HttpResponse<String> r = get(path);
+            assertEquals(200, r.statusCode(), path);
+            assertEquals("text/html; charset=utf-8", r.headers().firstValue("Content-Type").orElse(""));
+            assertTrue(r.body().contains("<title>cubit</title>"), path);
+        }
+    }
+
+    @Test
+    void unknownPathsAreNotFound() throws Exception {
+        assertEquals(404, get("/nope").statusCode());
+        assertEquals(404, get("/web/index.html").statusCode());
+        assertEquals(404, get("/api/other").statusCode());
+    }
+
+    @Test
+    void wrongMethodsAreRefused() throws Exception {
+        HttpResponse<String> evalGet = get("/api/eval");
+        assertEquals(405, evalGet.statusCode());
+        assertEquals("POST", evalGet.headers().firstValue("Allow").orElse(""));
+        assertTrue(evalGet.body().contains("method not allowed, use POST"), evalGet.body());
+        HttpRequest put = HttpRequest.newBuilder(URI.create(base + "/"))
+                .PUT(HttpRequest.BodyPublishers.ofString("x"))
+                .build();
+        HttpResponse<String> r = CLIENT.send(put, HttpResponse.BodyHandlers.ofString());
+        assertEquals(405, r.statusCode());
+        assertEquals("GET", r.headers().firstValue("Allow").orElse(""));
+    }
+
+    @Test
+    void aBodyAtTheLimitIsAccepted() throws Exception {
+        String prefix = "{\"expr\":\"1\",\"session\":\"limit-1\",\"pad\":\"";
+        String suffix = "\"}";
+        String body = prefix + "x".repeat(WebServer.MAX_BODY - prefix.length() - suffix.length()) + suffix;
+        assertEquals(WebServer.MAX_BODY, body.getBytes(java.nio.charset.StandardCharsets.UTF_8).length);
+        assertEquals(200, post(body).statusCode());
+        assertEquals(413, post(body + " ").statusCode());
+    }
+
+    private static HttpResponse<String> get(String path) throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder(URI.create(base + path)).build();
+        return CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
     }
 
     @Test

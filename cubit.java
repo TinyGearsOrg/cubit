@@ -10,8 +10,6 @@
  */
 //JAVA 25+
 //DEPS org.tinygears:uom:0.1.0
-//DEPS io.javalin:javalin:7.2.3
-//DEPS org.slf4j:slf4j-simple:2.0.20
 //SOURCES src/main/java/org/tinygears/cubit/CalcException.java
 //SOURCES src/main/java/org/tinygears/cubit/Calculator.java
 //SOURCES src/main/java/org/tinygears/cubit/Evaluator.java
@@ -22,7 +20,6 @@
 //SOURCES src/main/java/org/tinygears/cubit/TypeNames.java
 //SOURCES src/main/java/org/tinygears/cubit/WebServer.java
 //FILES web/index.html=src/main/resources/web/index.html
-//FILES simplelogger.properties=src/main/resources/simplelogger.properties
 
 /**
  * Runs cubit with jbang: {@code jbang cubit.java '3 kN * 2 m to J'}. The versions match pom.xml, and every source

@@ -97,6 +97,16 @@ class MainTest {
     }
 
     @Test
+    void aPortInUseIsAnError() throws Exception {
+        try (java.net.ServerSocket taken = new java.net.ServerSocket(0)) {
+            Run r = run("", "--serve", "--port", String.valueOf(taken.getLocalPort()));
+            assertEquals(1, r.code());
+            assertTrue(r.err().startsWith("error: cannot listen on localhost:" + taken.getLocalPort() + ": "), r.err());
+            assertEquals("", r.out());
+        }
+    }
+
+    @Test
     void serveStartsTheServerAndKeepsRunning() throws Exception {
         Run r = run("", "--serve", "--port", "0");
         assertEquals(Main.RUNNING, r.code());
